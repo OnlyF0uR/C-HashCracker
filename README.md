@@ -2,5 +2,5 @@
 A simple and hyperfast HashCracker written in C.
 
 ### TODO
-[ ] Add GPU support.
-[ ] Add prev. hash saving.
+- [x] Add GPU support.
+- [x] Add prev. hash saving.
