@@ -49,9 +49,10 @@ int main(int argc, char* argv[]) {
 				printf("Match found ^.");
 				return 0;
 			}
+
+			free(buffer);
 		}
 
-		free(buffer);
 		printf("No match found.");
 
 		err = fclose(fp);
