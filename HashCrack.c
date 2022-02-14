@@ -21,26 +21,21 @@ int main(int argc, char* argv[]) {
 
 	if (fp) {
 		char line[256];
-		int wasFound = 0;
+
+		char* buffer = NULL;
+		char* tmp_buf;
 		while (fgets(line, sizeof(line), fp)) {
 			size_t ln = strlen(line) - 1;
 			if (line[ln] == '\n') {
 				line[ln] = '\0';
 			}
 
-			char* buffer = malloc((SHA256_DIGEST_LENGTH * 2 + 1) * sizeof(char)); // 65 * sizeof(char)
-			char* tmp_buf;
-
 			if (strcmp(argv[2], "sha256") == 0) {
+				buffer = malloc((SHA256_DIGEST_LENGTH * 2 + 1) * sizeof(char)); // 65 * sizeof(char)
 				computeSHA256(line, buffer);
 			}
 			else if (strcmp(argv[2], "sha512") == 0) {
-				tmp_buf = realloc(buffer, (SHA512_DIGEST_LENGTH * 2 + 1) * sizeof(char)); // 129 * sizeof(char)
-				if (tmp_buf == NULL) {
-					printf("Realloc failed.");
-					return 1;
-				}
-				buffer = tmp_buf;
+				buffer = malloc((SHA512_DIGEST_LENGTH * 2 + 1) * sizeof(char)); // 129 * sizeof(char)
 				computeSHA512(line, buffer);
 			}
 			else {
@@ -52,14 +47,12 @@ int main(int argc, char* argv[]) {
 			
 			if (strcmp(argv[1], buffer) == 0) {
 				printf("Match found ^.");
-				wasFound = 1;
-				break;
+				return 0;
 			}
 		}
 
-		if (wasFound == 0) {
-			printf("No match found.");
-		}
+		free(buffer);
+		printf("No match found.");
 
 		err = fclose(fp);
 		if (err != 0) {
